@@ -5,7 +5,7 @@ type monotonic struct {
 	less func(interface{}, interface{}) bool
 }
 
-func NewMonotonic(less func(interface{}, interface{}) bool) *monotonic {
+func NewMonotonic(less func(interface{}, interface{}) bool) Queue {
 	return &monotonic{
 		Queue: New(),
 		less:  less,
