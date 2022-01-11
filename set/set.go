@@ -28,16 +28,28 @@ func (s Set) Pop() interface{} {
 	panic(fmt.Errorf("no item in set"))
 }
 
-func (s Set) Add(xx ...interface{}) {
+func (s Set) Add(xx ...interface{}) int {
+	var c int
 	for _, x := range xx {
-		s[x] = struct{}{}
+		_, found := s[x]
+		if !found {
+			c++
+			s[x] = struct{}{}
+		}
 	}
+	return c
 }
 
-func (s Set) Remove(xx ...interface{}) {
+func (s Set) Remove(xx ...interface{}) int {
+	var c int
 	for _, x := range xx {
-		delete(s, x)
+		_, found := s[x]
+		if found {
+			c++
+			delete(s, x)
+		}
 	}
+	return c
 }
 
 func (s Set) Clear() {
@@ -64,23 +76,15 @@ func Copy(desc, src Set) {
 	}
 }
 
-func Remove(desc, src Set) {
-	for k := range src {
-		desc.Remove(k)
-	}
-}
-
-func Intersection(a, b Set) Set {
-	r := make(Set)
-	if len(b) < len(a) {
-		a, b = b, a
-	}
-	for k := range a {
-		if b.Contains(k) {
-			r.Add(k)
+func RemoveIf(s Set, f func(x interface{}) bool) int {
+	var c int
+	for k := range s {
+		if f(k) {
+			c++
+			delete(s, k)
 		}
 	}
-	return r
+	return c
 }
 
 func Slice(s Set) []interface{} {
