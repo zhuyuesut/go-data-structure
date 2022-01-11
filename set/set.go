@@ -76,7 +76,7 @@ func Copy(desc, src Set) {
 	}
 }
 
-func RemoveIf(s Set, f func(x interface{}) bool) int {
+func RemoveIf(s Set, f func(x ...interface{}) bool) int {
 	var c int
 	for k := range s {
 		if f(k) {
